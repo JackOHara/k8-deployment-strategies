@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: syndicationservices
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/ingress.class: "private"
+  labels:
+    bosun.bazaarvoice.com/team: syndicationservices
+    bosun.bazaarvoice.com/service: cop-demo-api
+    bosun.bazaarvoice.com/role: ingress
+  name: cop-demo-api
+spec:
+  rules:
+    - host: api.subdomain.com
+      http:
+        paths:
+          - path: /demo/cop
+            backend:
+              serviceName: "cop-demo-api"
+              servicePort: 3000
+          - path: /demo/healthy
+            backend:
+              serviceName: "cop-demo-api"
+              servicePort: 3000
+          - path: /demo/ready
+            backend:
+              serviceName: "cop-demo-api"
+              servicePort: 3000
+
+  tls:
+    - hosts:
+        - api.subdomain.com
+      secretName: yoursecret-tls-private

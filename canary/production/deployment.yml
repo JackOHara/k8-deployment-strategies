@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: syndicationservices
+  name: cop-demo-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cop-demo-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: cop-demo-api
+        track: production
+    spec:
+      securityContext:
+        runAsUser: 1000
+      containers:
+        - name: cop-demo-api
+          image: 1234567890.dkr.ecr.us-east-1.amazonaws.com/syndication/k8-demo:canary-v10
+          ports:
+            - name: http
+              containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /demo/ready
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          env:
+          - name: VERSION
+            value: "Production"

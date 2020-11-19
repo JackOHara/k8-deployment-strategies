@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: syndicationservices
+  name: cop-demo-api
+spec:
+  selector:
+    app: cop-demo-api
+    version: "1.0" ##
+  ports:
+    - port: 3000
