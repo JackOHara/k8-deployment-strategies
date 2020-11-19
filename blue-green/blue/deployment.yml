@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: syndicationservices
+  name: cop-demo-api-blue
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cop-demo-api
+      version: "1.0" #
+  template:
+    metadata:
+      labels:
+        app: cop-demo-api
+        version: "1.0"
+    spec:
+      securityContext:
+        runAsUser: 1000
+      containers:
+        - name: cop-demo-api
+          image: 123456789.dkr.ecr.us-east-1.amazonaws.com/syndication/k8-demo:blue #
+          ports:
+            - name: http
+              containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /demo/ready
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          env:
+          - name: VERSION
+            value: "BLUE"
+
+
